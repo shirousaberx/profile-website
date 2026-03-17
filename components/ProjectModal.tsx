@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
@@ -14,14 +13,27 @@ interface ProjectModalProps {
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [imageIndex, setImageIndex] = useState(0);
+  const [imageExpanded, setImageExpanded] = useState(false);
 
   useEffect(() => {
-    if (project) setImageIndex(0);
+    if (project) {
+      setImageIndex(0);
+      setImageExpanded(false);
+    }
   }, [project]);
+
+  // Clamp imageIndex if it's out of bounds (e.g. after project switch)
+  const safeImageIndex = project
+    ? Math.min(imageIndex, Math.max(0, project.images.length - 1))
+    : 0;
+  const currentImageSrc = project?.images[safeImageIndex];
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (imageExpanded) setImageExpanded(false);
+        else onClose();
+      }
     };
     if (project) {
       document.body.style.overflow = "hidden";
@@ -31,32 +43,42 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [project, onClose]);
+  }, [project, onClose, imageExpanded]);
 
   return (
     <AnimatePresence>
       {project && (
         <>
           <motion.div
-            className="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-          />
-          <motion.div
-            className="fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl frosted-glass p-0 shadow-2xl"
-            initial={{ opacity: 0, scale: 0.95, y: "-50%" }}
-            animate={{ opacity: 1, scale: 1, y: "-50%" }}
-            exit={{ opacity: 0, scale: 0.95, y: "-50%" }}
-            transition={{ duration: 0.2 }}
-            onClick={(e) => e.stopPropagation()}
           >
-            {project.images.length > 0 && (
-              <div className="relative aspect-video w-full overflow-hidden rounded-t-xl">
+            <motion.div
+              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl frosted-glass p-0 shadow-2xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+            {project.images.length > 0 && currentImageSrc && (
+              <div
+                className="relative aspect-video w-full cursor-zoom-in overflow-hidden rounded-t-xl"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setImageExpanded(true);
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setImageExpanded(true)}
+                aria-label="Click to enlarge image"
+              >
                 <Image
-                  src={project.images[imageIndex]}
-                  alt={`${project.name} screenshot ${imageIndex + 1}`}
+                  src={currentImageSrc}
+                  alt={`${project.name} screenshot ${safeImageIndex + 1}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 672px"
@@ -67,6 +89,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
+                        e.preventDefault();
                         setImageIndex((i) => (i === 0 ? project.images.length - 1 : i - 1));
                       }}
                       className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-zinc-900/80 p-2 text-zinc-100 transition-colors hover:bg-zinc-800"
@@ -80,6 +103,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
+                        e.preventDefault();
                         setImageIndex((i) => (i === project.images.length - 1 ? 0 : i + 1));
                       }}
                       className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-zinc-900/80 p-2 text-zinc-100 transition-colors hover:bg-zinc-800"
@@ -96,6 +120,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             setImageIndex(i);
                           }}
                           className={`h-1.5 rounded-full transition-all ${
@@ -138,12 +163,6 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     Live Demo
                   </a>
                 )}
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="rounded-full border border-zinc-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-zinc-400 hover:bg-zinc-800"
-                >
-                  View details
-                </Link>
                 <button
                   type="button"
                   onClick={onClose}
@@ -153,7 +172,99 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 </button>
               </div>
             </div>
+            </motion.div>
           </motion.div>
+
+          {/* Expanded image lightbox */}
+          <AnimatePresence>
+            {project && imageExpanded && project.images.length > 0 && currentImageSrc && (
+              <>
+                <motion.div
+                  className="fixed inset-0 z-60 flex items-center justify-center bg-black/95 p-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setImageExpanded(false)}
+                >
+                  <motion.div
+                    className="relative h-[85vh] w-[95vw] max-w-6xl"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Image
+                      src={currentImageSrc}
+                      alt={`${project.name} screenshot ${safeImageIndex + 1}`}
+                      fill
+                      className="rounded-lg object-contain"
+                      sizes="95vw"
+                    />
+                    {project.images.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setImageIndex((i) => (i === 0 ? project.images.length - 1 : i - 1));
+                          }}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-zinc-900/90 p-2.5 text-zinc-100 transition-colors hover:bg-zinc-700"
+                          aria-label="Previous image"
+                        >
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setImageIndex((i) => (i === project.images.length - 1 ? 0 : i + 1));
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-zinc-900/90 p-2.5 text-zinc-100 transition-colors hover:bg-zinc-700"
+                          aria-label="Next image"
+                        >
+                          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                        <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-2 rounded-full bg-zinc-900/90 px-3 py-1.5">
+                          {project.images.map((_, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setImageIndex(i);
+                              }}
+                              className={`h-2 rounded-full transition-all ${
+                                i === imageIndex ? "w-6 bg-zinc-100" : "w-2 bg-zinc-500"
+                              }`}
+                              aria-label={`Go to image ${i + 1}`}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImageExpanded(false);
+                      }}
+                      className="absolute right-2 top-2 rounded-full bg-zinc-900/90 p-2 text-zinc-100 transition-colors hover:bg-zinc-700"
+                      aria-label="Close"
+                    >
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

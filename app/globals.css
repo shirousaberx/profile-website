@@ -31,11 +31,14 @@ body {
 }
 
 /* Background images layer - abstract gradient and tech textures */
-/* Parallax: moves at slower rate than scroll via --parallax-offset (set by ParallaxBackground) */
+/* Parallax: extends above viewport so content is available when translating down on scroll */
 .portfolio-bg::after {
   content: "";
   position: fixed;
-  inset: 0;
+  top: -500vh;
+  left: 0;
+  right: 0;
+  height: 700vh;
   transform: translateY(calc(var(--parallax-offset, 0) * 1px));
   will-change: transform;
   background-image: 
@@ -67,17 +70,16 @@ header.frosted-glass {
   -webkit-backdrop-filter: blur(48px) saturate(180%); */
 }
 
-/* Grid overlay - parallax */
+/* Grid overlay - parallax via background-position (repeats infinitely, never runs out) */
 .portfolio-bg::before {
   content: "";
   position: fixed;
   inset: 0;
-  transform: translateY(calc(var(--parallax-offset, 0) * 1px));
-  will-change: transform;
   background-image: 
     linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 64px 64px;
+  background-position: 0 calc(var(--parallax-offset, 0) * 1px), calc(var(--parallax-offset, 0) * 1px) 0;
   pointer-events: none;
   z-index: -1;
 }

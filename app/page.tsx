@@ -19,10 +19,10 @@ export default function Home() {
     <>
       <Hero />
       <About />
+      <Experience />
       <Skills />
       <FeaturedProjects onProjectClick={setSelectedProject} />
       <AllProjects onProjectClick={setSelectedProject} />
-      <Experience />
       <Certifications />
       <Training />
       <ProjectModal
