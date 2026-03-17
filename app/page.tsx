@@ -9,7 +9,6 @@ import { AllProjects } from "@/components/AllProjects";
 import { Training } from "@/components/Training";
 import { Certifications } from "@/components/Certifications";
 import { Skills } from "@/components/Skills";
-import { Contact } from "@/components/Contact";
 import { ProjectModal } from "@/components/ProjectModal";
 import type { Project } from "@/data/projects";
 
@@ -26,7 +25,6 @@ export default function Home() {
       <Experience />
       <Certifications />
       <Training />
-      <Contact />
       <ProjectModal
         project={selectedProject}
         onClose={() => setSelectedProject(null)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { skillIcons } from "@/lib/skill-icons";
 import { skills } from "@/data/profile";
 
 const categories = [
@@ -8,6 +9,7 @@ const categories = [
   { key: "backend" as const, label: "Backend" },
   { key: "embedded" as const, label: "Embedded & Tools" },
   { key: "cloud" as const, label: "Cloud" },
+  { key: "languages" as const, label: "Programming Languages" },
 ];
 
 export function Skills() {
@@ -37,14 +39,21 @@ export function Skills() {
                 {label}
               </h3>
               <div className="flex flex-wrap gap-2">
-                {skills[key].map((skill) => (
-                  <span
-                    key={skill}
-                    className="inline-flex items-center rounded-md bg-zinc-800 px-2.5 py-1 text-sm text-zinc-100 ring-1 ring-zinc-600 transition-colors hover:bg-zinc-700"
-                  >
-                    {skill}
-                  </span>
-                ))}
+                {skills[key].map((skill) => {
+                  const Icon = skillIcons[skill];
+                  return (
+                    <span
+                      key={skill}
+                      className="inline-flex items-center gap-1.5 rounded-md bg-zinc-800 px-2.5 py-1 text-sm text-zinc-100 ring-1 ring-zinc-600 transition-colors hover:bg-zinc-700"
+                      title={skill}
+                    >
+                      {Icon ? (
+                        <Icon className="size-4 shrink-0" aria-hidden />
+                      ) : null}
+                      {skill}
+                    </span>
+                  );
+                })}
               </div>
             </motion.div>
           ))}

@@ -31,11 +31,13 @@ body {
 }
 
 /* Background images layer - abstract gradient and tech textures */
-/* Replace Unsplash URLs with local paths like url("/backgrounds/mesh.jpg") if desired */
+/* Parallax: moves at slower rate than scroll via --parallax-offset (set by ParallaxBackground) */
 .portfolio-bg::after {
   content: "";
   position: fixed;
   inset: 0;
+  transform: translateY(calc(var(--parallax-offset, 0) * 1px));
+  will-change: transform;
   background-image: 
     linear-gradient(180deg, rgba(8, 8, 10, 0.85) 0%, transparent 40%, rgba(8, 8, 10, 0.6) 100%),
     url("https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=1920&q=60"),
@@ -50,24 +52,28 @@ body {
 
 /* Frosted glass - use on cards, modals, header */
 .frosted-glass {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* From https://css.glass */
+  background: rgba(140, 100, 100, 0.29);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8.7px);
+  -webkit-backdrop-filter: blur(8.7px);
+  border: 1px solid rgba(140, 100, 100, 0.3);
 }
 
 /* Stronger frost for header so it stays visible when scrolling */
 header.frosted-glass {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.8);
+  /* backdrop-filter: blur(48px) saturate(180%);
+  -webkit-backdrop-filter: blur(48px) saturate(180%); */
 }
 
-/* Grid overlay */
+/* Grid overlay - parallax */
 .portfolio-bg::before {
   content: "";
   position: fixed;
   inset: 0;
+  transform: translateY(calc(var(--parallax-offset, 0) * 1px));
+  will-change: transform;
   background-image: 
     linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);

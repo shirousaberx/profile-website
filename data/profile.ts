@@ -2,7 +2,7 @@ export const profile = {
   name: "Michael Alexander",
   title: "Fullstack Developer",
   tagline:
-    "Backend architecture, system design, and low-level systems — from fintech to embedded IoT.",
+    "Backend architecture, frontend design, and low-level systems — from fintech to embedded IoT.",
   email: "michaelalexander666666@gmail.com",
   linkedin: "https://www.linkedin.com/in/mikealexa/",
   github: "https://github.com/shirousaberx",
@@ -17,4 +17,5 @@ export const skills = {
   backend: ["Express.js", "Flask", "PHP", "Node.js", "Python", "MySQL", "Redis"],
   embedded: ["C/C++", "MQTT", "Raspberry Pi", "TensorFlow"],
   cloud: ["GCP", "AWS", "Docker", "CI/CD", "Git"],
+  languages: ["Python", "JavaScript", "TypeScript", "Java", "C/C++", "PHP", "SQL"],
 };

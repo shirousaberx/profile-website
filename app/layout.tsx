@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { ParallaxBackground } from "@/components/ParallaxBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} portfolio-bg font-sans text-zinc-100 antialiased`}
       >
+        <ParallaxBackground />
         <Header />
         {children}
       </body>

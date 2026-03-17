@@ -20,7 +20,7 @@ export function Certifications() {
           {certifications.map((item, i) => (
             <motion.article
               key={item.title}
-              className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
+              className="rounded-xl frosted-glass p-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
