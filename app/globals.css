@@ -65,10 +65,12 @@ body {
 
 /* Stronger frost for header so it stays visible when scrolling */
 header.frosted-glass {
-  background: rgba(255, 255, 255, 0.8);
+  /* background: rgba(255, 255, 255, 0.8); */
   /* backdrop-filter: blur(48px) saturate(180%);
   -webkit-backdrop-filter: blur(48px) saturate(180%); */
 }
+
+
 
 /* Grid overlay - parallax via background-position (repeats infinitely, never runs out) */
 .portfolio-bg::before {

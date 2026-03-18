@@ -54,7 +54,7 @@ export function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="border-t border-white/10 frosted-glass md:hidden"
+            className="border-t border-white/10 bg-zinc-900/50 backdrop-blur-md md:hidden"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

@@ -31,7 +31,13 @@ export const projects: Project[] = [
       "Cross-platform movie discovery app with TMDB integration, search, filtering, and local favorites.",
     techStack: ["React Native", "TMDB API", "JavaScript", "Cross-platform"],
     githubUrl: "https://github.com/shirousaberx/movie-app",
-    images: [],
+    images: [
+      'https://github.com/user-attachments/assets/9ec5031b-e3e8-4243-9b48-ba641946cce7',
+      'https://github.com/user-attachments/assets/75ccfdb0-120b-470b-b9af-c5b8f2381cc6',
+      'https://github.com/user-attachments/assets/c83e3818-1802-4319-83a6-61797d88b418',
+      'https://github.com/user-attachments/assets/d85b3de5-32fe-4470-9040-61fd16e92da4',
+      'https://github.com/user-attachments/assets/f0feb07d-1fb7-4419-86f9-42ae19b6c188'
+    ],
     featured: true,
   },
   {
@@ -41,7 +47,9 @@ export const projects: Project[] = [
       "Desktop image editor with channel separation, kernel filtering, morphology, and blending. Built with Lazarus for low-level pixel manipulation.",
     techStack: ["Lazarus", "Pascal", "Image Processing", "Kernel Filtering", "Morphology"],
     githubUrl: "https://github.com/shirousaberx/image-editor",
-    images: [],
+    images: [
+      'https://github.com/user-attachments/assets/6a1bea3c-2098-4037-bf9f-cb4d50958e27'
+    ],
     featured: false,
   },
   {

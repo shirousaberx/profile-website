@@ -29,7 +29,7 @@ export function ProjectCard({ project, index = 0, onClick }: ProjectCardProps) {
             src={project.images[0]}
             alt={project.name}
             fill
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-contain transition-transform group-hover:scale-100"
             sizes="(max-width: 768px) 100vw, 50vw"
             loading="lazy"
           />

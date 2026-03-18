@@ -14,13 +14,19 @@ interface ProjectModalProps {
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageExpanded, setImageExpanded] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   useEffect(() => {
     if (project) {
       setImageIndex(0);
       setImageExpanded(false);
+      setImageLoading(true);
     }
   }, [project]);
+
+  useEffect(() => {
+    if (project?.images.length) setImageLoading(true);
+  }, [imageIndex, project]);
 
   // Clamp imageIndex if it's out of bounds (e.g. after project switch)
   const safeImageIndex = project
@@ -76,12 +82,19 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 onKeyDown={(e) => e.key === "Enter" && setImageExpanded(true)}
                 aria-label="Click to enlarge image"
               >
+                {imageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80">
+                    <span className="text-sm text-zinc-400">Loading...</span>
+                  </div>
+                )}
                 <Image
                   src={currentImageSrc}
                   alt={`${project.name} screenshot ${safeImageIndex + 1}`}
                   fill
-                  className="object-cover"
+                  className={`object-contain transition-opacity duration-200 ${imageLoading ? "opacity-0" : "opacity-100"}`}
                   sizes="(max-width: 768px) 100vw, 672px"
+                  onLoad={() => setImageLoading(false)}
+                  onError={() => setImageLoading(false)}
                 />
                 {project.images.length > 1 && (
                   <>
@@ -194,12 +207,19 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     transition={{ duration: 0.2 }}
                     onClick={(e) => e.stopPropagation()}
                   >
+                    {imageLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-zinc-900/90">
+                        <span className="text-zinc-400">Loading...</span>
+                      </div>
+                    )}
                     <Image
                       src={currentImageSrc}
                       alt={`${project.name} screenshot ${safeImageIndex + 1}`}
                       fill
-                      className="rounded-lg object-contain"
+                      className={`rounded-lg object-contain transition-opacity duration-200 ${imageLoading ? "opacity-0" : "opacity-100"}`}
                       sizes="95vw"
+                      onLoad={() => setImageLoading(false)}
+                      onError={() => setImageLoading(false)}
                     />
                     {project.images.length > 1 && (
                       <>
